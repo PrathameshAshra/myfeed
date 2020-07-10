@@ -38,7 +38,7 @@ searchable: string;
   sortModel: string;
   @HostListener('window:resize', ['$event'])
 
- 
+//  Checking the width of window to turn table into cards
   onResize(event) {
     this.innerWidth = window.innerWidth;
     if (this.innerWidth > 769) {
@@ -50,16 +50,20 @@ searchable: string;
     }
 
   }
+
+  // loads data from assets via service
   getSampleDataJson() {
     this._cardService.getSampleData().subscribe(
       data => {
         this.CardModelList.CarList = data
         this.mutableClone = data
+        // assigns to pagination 
         this.changeDetectorRef.detectChanges();
         this.dataSource.data = this.mutableClone
         this.dataSource.paginator = this.paginator;
         this.obs = this.dataSource.connect();
         try {
+          // retriving keywords from localstorage to maintain state
           var keyword = localStorage.getItem('search').trim()
           var sortkey = localStorage.getItem('sortkey').trim()
           console.log(keyword)
@@ -81,23 +85,29 @@ searchable: string;
       }
     )
   }
+
+  // sorting
   doSort(value){
     console.log(value)
     this.sortable = value 
 if(value == 'Tittle'){
   this.mutableClone.sort((a, b) => (a.name > b.name) ? 1 : -1)
-  this.dataSource.data = this.mutableClone
+  this.dataSource.data = this.mutableClone;
+  // set localstorage key value
+
   localStorage.setItem('sortkey',value)
 
 }else{
   this.mutableClone.sort((a, b) => (a.dateLastEdited < b.dateLastEdited) ? 1 : -1)
   this.dataSource.data = this.mutableClone
+    // set localstorage key value
+
   localStorage.setItem('sortkey',value)
 
 
 }
   }
-
+// clear search/sort
   clear(ev){
 if(ev =="search"){
   this.search(' ')
@@ -111,6 +121,9 @@ else{
   localStorage.removeItem('sortkey')
 }
   }
+
+  // search-> split words into 3 fragments to get content between the "",
+ 
   search(keyword: string) {
     this.searchable = keyword
     localStorage.setItem('search', keyword.trim())
@@ -118,6 +131,7 @@ else{
     var temp = [];
     var splitted = keyword.split('"', 3);
     var inputPara = keyword.split(' ');
+    // Exact Search
     if (splitted[1]?.length > 0) {
       this.mutableClone.forEach(element => {
         if (element.name.toLowerCase().includes(splitted[1].toLocaleLowerCase()) || element.description.toLowerCase().includes(splitted[1].toLocaleLowerCase())) {
@@ -126,6 +140,7 @@ else{
       });
 
     } else {
+      // Loose Search
       var counter = 0
       
       this.mutableClone.forEach(dataRow => {
