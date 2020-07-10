@@ -1,0 +1,124 @@
+<div class="container">
+<div class="breadcrumbs">
+    <span>FEED</span>
+</div>
+<div class="toolbar">
+    <mat-form-field class="example-form-field" appearance="fill">
+        <mat-label>Search</mat-label>
+        <input matInput type="text"  (keyup.enter)="search(searchText)"  placeholder="Search by name or description" [(ngModel)]="searchText">
+        <!-- <button mat-button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear" (click)="search(searchText)">
+          <mat-icon>close</mat-icon>
+        </button> -->
+        <button mat-button *ngIf="!searchable" matSuffix mat-icon-button aria-label="search" (click)="search(searchText)">
+            <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+        <mat-form-field class="action-pannel" appearance="fill">
+            <mat-label>Sort</mat-label>
+            <mat-select name="food" [(ngModel)]='sortModel' (selectionChange)="doSort($event.value)">
+              <mat-option  *ngFor="let food of SortFilter" [value]="food.value">
+                {{food.viewValue}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      
+</div>
+<div class="filterbar">
+    <mat-chip  *ngIf="searchable">
+        Search by {{searchable}}
+        <mat-icon matChipRemove (click)="clear('search')" >cancel</mat-icon>
+      </mat-chip>
+    <mat-chip  *ngIf="sortable">
+        Sort by {{sortable}}
+        <mat-icon matChipRemove (click)="clear('sort')" >cancel</mat-icon>
+      </mat-chip>
+
+</div>
+
+<div class="card-container">
+    <mat-card class="card-rect" *ngFor="let item of obs | async ">
+        <div class="content">
+            <img class="img" src="{{item.image}}" alt="" srcset="">
+            <h2 class="name">{{item.name}}</h2>
+        
+            <h5 class="description">{{item.description}}</h5>
+        </div>
+        <div class="timestamp">
+            <span class="dated">{{item.dateLastEdited | date:'medium'}}</span>
+        
+           </div>
+      </mat-card>
+
+
+
+
+
+
+<!-- <div class="card-rect" *ngFor='let item of mutableClone '>
+    <div class="content">
+        <img class="img" src="{{item.image}}" alt="" srcset="">
+        <h2 class="name">{{item.name}}</h2>
+    
+        <h5 class="description">{{item.description}}</h5>
+    </div>
+   <div class="timestamp">
+    <span class="dated">{{item.dateLastEdited | date:'medium'}}</span>
+
+   </div>
+</div> -->
+
+
+</div>
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
+<div class="TableHeaderLabel">
+    <span>Tablular Data</span>
+</div>
+<div class="table-container" *ngIf="isTab">
+    <div class="header-row">
+        <h5 class="header-name">Name</h5>
+        <h5 class="header-description">Description</h5>
+        <h5 class="header-dateLastEdited">Updated Time
+        </h5>
+        <h5 class="header-image">Image Link</h5>
+    </div>
+    <div *ngFor='let item of obs | async '>
+        <div class="content-row"  >
+            <h5  class="content-name">{{item.name}}</h5>
+            <h5  class="content-description">{{item.description}}</h5>
+            <h5   class="content-dateLastEdited">{{item.dateLastEdited  | date:'medium'}}
+            </h5>
+            <h5   class="content-image">{{item.image}}</h5>
+        </div>
+    </div>
+</div>
+
+<div class="table-card-container" *ngIf=" !isTab">
+    <div *ngFor='let item of obs | async'>
+        <div  class="table-card" >   
+            <div class="table-card-row">
+                <span>Name</span>
+                <h5  class="content-name">{{item.name}}</h5>
+
+            </div> 
+            <div class="table-card-row">
+                <span>Description</span>
+                <h5  class="content-description">{{item.description}}</h5>
+
+            </div> 
+            <div class="table-card-row">
+                <span>Time</span>
+                <h5   class="content-dateLastEdited">{{item.dateLastEdited  | date:'medium'}}</h5>
+
+            </div> 
+            <div class="table-card-row">
+                <span>Image Link</span>
+                <h5  class="content-image">{{item.image}}</h5>
+
+            </div>  
+        </div>
+    </div>
+   
+</div> 
+
+</div>
